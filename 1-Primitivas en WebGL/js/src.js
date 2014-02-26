@@ -100,6 +100,7 @@
     }
 
     //Creamos los Buffers para cada figura a utilizar
+    var estrellaVertexPos;
     var triangleVertexPositionBuffer;
     var squareVertexPositionBuffer;
     var squareVertexPositionBuffer2;
@@ -119,6 +120,7 @@
         triangleVertexPositionBuffer.numItems = 3; //Vertices
         // Fin de Le Triangulo
         
+        
         //Square
         squareVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
@@ -137,7 +139,7 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer2);
         vertices = [
              0.0,  2.0,  0.0,
-             -1.0, 1.0,  0.0,
+            -1.0,  1.0,  0.0,
              1.0,  1.0,  0.0,
             -1.0,  1.0,  0.0,
              1.0, -0.5,  0.0,
@@ -146,6 +148,43 @@
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         squareVertexPositionBuffer2.itemSize = 3;
         squareVertexPositionBuffer2.numItems = 6;
+        
+        
+           // Estrella.Start
+        //Triangulo1 Estrella
+        estrellaVertexPos = gl.createBuffer(); // Creamos un buffer!
+        gl.bindBuffer(gl.ARRAY_BUFFER, estrellaVertexPos); // (target,buffer)
+         vertices = [ //CCW
+             1.0,  2.0,  0.0,
+             0.0,  4.0,  0.0,
+            -1.0,  2.0,  0.0,
+
+            -1.0,  2.0,  0.0,
+            -3.0,  2.0,  0.0,
+            -2.0,  0.0,  0.0,
+
+            -2.0,  0.0,  0.0,
+            -3.0, -2.0,  0.0,
+            -1.0, -2.0,  0.0,
+
+            -1.0, -2.0,  0.0,
+             0.0, -4.0,  0.0,
+             1.0, -2.0,  0.0,
+
+             1.0, -2.0,  0.0,
+             3.0, -2.0,  0.0,
+             2.0,  0.0,  0.0,
+
+             2.0,  0.0,  0.0,
+             3.0,  2.0,  0.0,
+             1.0,  2.0,  0.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW); // Ajusta el tamaño limite del buffer
+        estrellaVertexPos.itemSize = 3; //Dimensiones
+        estrellaVertexPos.numItems = 18; //Vertices
+        //EndTriangulo1
+        
+        // Fin Estrella
     }
 
 
@@ -173,7 +212,7 @@
 
         //movemos nuestro centro de dibujo 3 unidades a la derecha, recordemos que antes estabamos -1.5 unidades a la izqueirda
         //lo cual nos deja en 1.5 unidades en el eje x con respecto al centro (0,0,0)
-        mat4.translate(mvMatrix, [3.0, 0.0, 0.0]);
+        mat4.translate(mvMatrix, [2.0, 0.0, 0.0]);
         
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -181,7 +220,7 @@
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
 
-        mat4.translate(mvMatrix, [3.0, 0.0, -7.0]); //Modificamos la profundidad
+        mat4.translate(mvMatrix, [2.0, 0.0, -7.0]); //Modificamos la profundidad
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer2);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer2.itemSize, gl.FLOAT, false, 0, 0);
         setMatrixUniforms();
@@ -189,6 +228,18 @@
         //para una figura de 4 vertices A,B,C,D se requieren 2 triangulos para su dibujado, por ende dibujamos
         //el triangulo A,B,C,A y luego el triangulo B,C,D,B
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer2.numItems);
+        
+        //Trasladamos el centro en 4x,0y,-7.0z
+        mat4.translate(mvMatrix, [ 4.7, 0.0, -7.0]);
+        
+        gl.bindBuffer(gl.ARRAY_BUFFER, estrellaVertexPos);
+        //(http://msdn.microsoft.com/en-us/library/ie/dn302460(v=vs.85).aspx
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, estrellaVertexPos.itemSize, gl.FLOAT, false, 0, 0);
+        
+        setMatrixUniforms(); // Copiamos de posiciones de cada vertice en nuestra GPU
+        //Dibujamos triangulos desde el vertice 0 al n (Metodo de dibujo, V0, Vn)
+        gl.drawArrays(gl.TRIANGLES, 0, estrellaVertexPos.numItems);
+        
     }
 
 
@@ -199,7 +250,7 @@
         //Seteamos el canvas según nuestras necesidades
         renderer.style.position = "absolute";
         renderer.style.top = 0; renderer.style.left= 0;
-        renderer.width = 1000; renderer.height = 500; // Canvas = 1000 x 500 px
+        renderer.width = 1280; renderer.height = 720; // Canvas = 1000 x 500 px
         
         //Adicionamos al DOM en el nodo "body" nuestro canvas AKA renderer
         document.body.appendChild( renderer );
@@ -209,7 +260,7 @@
         initBuffers(); // Inicializamos los buffers
 
         //R,G,B,A
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);                      // Seleccionamos el color como negro a 100% de opacidad
+        gl.clearColor(0.6, 0.5, 0.4, 0.7);                      // Seleccionamos el color como negro a 100% de opacidad
         gl.enable(gl.DEPTH_TEST);                               // Activado el test de profundidad
         gl.depthFunc(gl.LEQUAL);                                // Diferenciamos los objetos cercanos de los lejanos con su opacidad
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);      // Limpiar el buffer de color y profundidad
