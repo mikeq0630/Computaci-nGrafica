@@ -104,6 +104,9 @@
     var triangleVertexPositionBuffer;
     var squareVertexPositionBuffer;
     var squareVertexPositionBuffer2;
+    var figura1;
+    var figura2;
+    var figura3;
 
     function initBuffers() {
         
@@ -140,14 +143,13 @@
         vertices = [
              0.0,  2.0,  0.0,
             -1.0,  1.0,  0.0,
-             1.0,  1.0,  0.0,
-            -1.0,  1.0,  0.0,
-             1.0, -0.5,  0.0,
-            -1.0, -0.5,  0.0
+            -1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  1.0,  0.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         squareVertexPositionBuffer2.itemSize = 3;
-        squareVertexPositionBuffer2.numItems = 6;
+        squareVertexPositionBuffer2.numItems = 5;
         
         
            // Estrella.Start
@@ -155,29 +157,29 @@
         estrellaVertexPos = gl.createBuffer(); // Creamos un buffer!
         gl.bindBuffer(gl.ARRAY_BUFFER, estrellaVertexPos); // (target,buffer)
          vertices = [ //CCW
-             1.0,  2.0,  0.0,
-             0.0,  4.0,  0.0,
-            -1.0,  2.0,  0.0,
+             0.5,  1.0,  0.0,
+             0.0,  2.0,  0.0,
+            -0.5,  1.0,  0.0,
 
-            -1.0,  2.0,  0.0,
-            -3.0,  2.0,  0.0,
-            -2.0,  0.0,  0.0,
+            -0.5,  1.0,  0.0,
+            -1.5,  1.0,  0.0,
+            -1.0,  0.0,  0.0,
 
-            -2.0,  0.0,  0.0,
-            -3.0, -2.0,  0.0,
-            -1.0, -2.0,  0.0,
+            -1.0,  0.0,  0.0,
+            -1.5, -1.0,  0.0,
+            -0.5, -1.0,  0.0,
 
-            -1.0, -2.0,  0.0,
-             0.0, -4.0,  0.0,
-             1.0, -2.0,  0.0,
+            -0.5, -1.0,  0.0,
+             0.0, -2.0,  0.0,
+             0.5, -1.0,  0.0,
 
-             1.0, -2.0,  0.0,
-             3.0, -2.0,  0.0,
-             2.0,  0.0,  0.0,
+             0.5, -1.0,  0.0,
+             1.5, -1.0,  0.0,
+             1.0,  0.0,  0.0,
 
-             2.0,  0.0,  0.0,
-             3.0,  2.0,  0.0,
-             1.0,  2.0,  0.0
+             1.0,  0.0,  0.0,
+             1.5,  1.0,  0.0,
+             0.5,  1.0,  0.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW); // Ajusta el tamaño limite del buffer
         estrellaVertexPos.itemSize = 3; //Dimensiones
@@ -185,6 +187,67 @@
         //EndTriangulo1
         
         // Fin Estrella
+        
+        
+        
+        
+        //Figura1
+        figura1 = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, figura1);
+        vertices = [
+            
+             0.0,  0.0,  0.0,
+            -1.0,  1.0,  0.0,
+            -1.0,  0.0,  0.0,
+             1.0,  0.0,  0.0,
+             1.0,  1.0,  0.0
+             
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        figura1.itemSize = 3;
+        figura1.numItems = 5;
+        
+        //figura2
+        figura2 = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, figura2);
+        vertices = [
+            
+             0.0,  0.0,  0.0,
+            -1.0, -1.0,  0.0,
+            -1.0, -2.0,  0.0,
+             0.0, -3.0,  0.0,
+             1.0, -3.0,  0.0,
+             2.0, -2.0,  0.0,
+             2.0, -1.0,  0.0,
+             1.0,  0.0,  0.0
+             
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        figura2.itemSize = 3;
+        figura2.numItems = 8;
+        
+        
+        //figura3
+        figura3 = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, figura3);
+        vertices = [
+            
+             0.0,  0.0,  0.0,
+             0.0, 2.0, 0.0,
+            -1.0, 1.0,0.0,
+            -2.0, 1.0,0.0,
+            -1.0, -1.0,0.0,
+             0.0, 0.0, 0.0,
+             1.0, -1.0, 0.0,
+             2.0, 1.0, 0.0,
+             1.0, 1.0, 0.0,
+             0.0,2.0,0.0
+             
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        figura3.itemSize = 3;
+        figura3.numItems = 10;
+        
     }
 
 
@@ -227,10 +290,12 @@
         //TRIANGLE_STRIP permite dibujar las figuras en base a triangulos teniendo en cuenta el siguiente patron:
         //para una figura de 4 vertices A,B,C,D se requieren 2 triangulos para su dibujado, por ende dibujamos
         //el triangulo A,B,C,A y luego el triangulo B,C,D,B
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer2.numItems);
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, squareVertexPositionBuffer2.numItems);
+     
         
-        //Trasladamos el centro en 4x,0y,-7.0z
-        mat4.translate(mvMatrix, [ 4.7, 0.0, -7.0]);
+        
+        //Trasladamos el centro en 4x,1y,-7.0z
+        mat4.translate(mvMatrix, [ 4.0, 1.0, -7.0]);
         
         gl.bindBuffer(gl.ARRAY_BUFFER, estrellaVertexPos);
         //(http://msdn.microsoft.com/en-us/library/ie/dn302460(v=vs.85).aspx
@@ -239,6 +304,31 @@
         setMatrixUniforms(); // Copiamos de posiciones de cada vertice en nuestra GPU
         //Dibujamos triangulos desde el vertice 0 al n (Metodo de dibujo, V0, Vn)
         gl.drawArrays(gl.TRIANGLES, 0, estrellaVertexPos.numItems);
+        
+        
+        //Figura1
+        
+        mat4.translate(mvMatrix, [6.0, 0.0, -7.0]); //Modificamos la profundidad
+        gl.bindBuffer(gl.ARRAY_BUFFER, figura1);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, figura1.itemSize, gl.FLOAT, false, 0, 0);
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, figura1.numItems);
+         
+        //Figura2
+        
+        mat4.translate(mvMatrix, [2.0, -2.0, -7.0]); //Modificamos la profundidad
+        gl.bindBuffer(gl.ARRAY_BUFFER, figura2);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, figura2.itemSize, gl.FLOAT, false, 0, 0);
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, figura2.numItems);
+        
+        //Figura3
+        
+        mat4.translate(mvMatrix, [2.0, -6.0, -7.0]); //Modificamos la profundidad
+        gl.bindBuffer(gl.ARRAY_BUFFER, figura3);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, figura3.itemSize, gl.FLOAT, false, 0, 0);
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_FAN, 0, figura3.numItems);
         
     }
 
